@@ -373,14 +373,13 @@ You should see a `stub_...` row. That means your full half works: thinking → t
 
 ## Step 9 — You're done when you can tick all of these
 
-- [ ] `docker --version` / `docker ps` work, and `docker run --gpus all` sees an A40
-- [ ] `brain` is serving — `curl localhost:8000/v1/models` returns the model name
-- [ ] `records` is running and the `runs` table exists
-- [ ] Your venv has `pydantic-ai` and `psycopg`
-- [ ] A manual `save_record` test inserts a row
-- [ ] `python3 agent.py` runs: the model calls the tool and a `stub_` row appears
-- [ ] Your `contract.py` is the one both halves rely on
-
+- [DONE] `docker --version` / `docker ps` work, and `docker run --gpus all` sees an A40
+- [DONE] `brain` is serving — `curl localhost:8000/v1/models` returns the model name
+- [DONE] `records` is running and the `runs` table exists
+- [DONE] Your venv has `pydantic-ai` and `psycopg`
+- [DONE] A manual `save_record` test inserts a row
+- [DONE] `python3 agent.py` runs: the model calls the tool and a `stub_` row appears
+- [DONE] Your `contract.py` is the one both halves rely on
 ---
 
 ## Converge day — connecting to Stefan's real tools

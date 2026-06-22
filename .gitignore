@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Secrets and keys — NEVER commit these
+.env
+*.pem
+*.key
+target-certs/
+
+# Large or sensitive data
+captures/
+*.pcap
+pgdata/
+
+# Editor noise
+.DS_Store

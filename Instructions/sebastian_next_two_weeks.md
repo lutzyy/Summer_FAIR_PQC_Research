@@ -2,7 +2,29 @@
 
 **Your role:** Brain & Records (`adversary/brain/`)  
 **Working folder:** `~/Summer_FAIR_PQC_Research/adversary/brain` on MIDAS 2  
-**Runbook reference:** `Instructions/sebastian_brain_and_records (1).md`
+**Runbook reference:** `Instructions/sebastian_brain_and_records (1).md`  
+**Safety reference:** `Instructions/lab_safety_checklist.md`
+
+---
+
+## Safety first — every MIDAS 2 session
+
+Before enabling real tools or running `agent.py` against Stefan's lab:
+
+```bash
+cd ~/Summer_FAIR_PQC_Research/adversary/tools
+bash verify-lab-safety.sh
+```
+
+**Run this every time** you connect to MIDAS 2, and **again** after any Docker change or before converge.
+
+| Your responsibility | Rule |
+|---------------------|------|
+| Keep `brain` / `records` off `lab-net` | Never add `--network lab-net` to those containers |
+| Trigger attacks only via `agent.py` | Never run `tools.py` or `tcpreplay` on the host |
+| Real tools only when script passes | Use stubs if Stefan's lab is down or checks fail |
+
+If the script prints **FAIL**, use stub mode and tell Stefan — do not run real attacks.
 
 ---
 
@@ -35,7 +57,8 @@
 
 Reconnect to MIDAS 2 and confirm everything you built in Step 9 still runs.
 
-- [ ] `git pull` on `main` — confirm Stefan's `adversary/tools/` files are present.
+- [ ] `git pull` on `main` — confirm you have `adversary/tools/verify-lab-safety.sh` and `Instructions/lab_safety_checklist.md`.
+- [ ] **Run `bash ../tools/verify-lab-safety.sh`** (from `brain/` or `tools/`). If Stefan's lab is not up yet, expect failures — use stub mode only until it passes.
 - [ ] Check containers:
   ```bash
   docker ps --filter name=brain
@@ -162,7 +185,10 @@ Change line 60 in `agent.py` from `_execute` to `real_execute` and delete the st
 ```bash
 docker ps    # brain, records, practice-target, attacker all running
 curl http://localhost:8000/v1/models
+cd ~/Summer_FAIR_PQC_Research/adversary/tools && bash verify-lab-safety.sh
 ```
+
+All safety checks must **PASS** before enabling real tools.
 
 ### Converge steps
 
@@ -289,6 +315,7 @@ git push -u origin student2-brain
 
 ## Success criteria (end of Jul 9)
 
+- [ ] `verify-lab-safety.sh` run at start of every MIDAS session before real tool use
 - [ ] Contract typo fixed, `requirements.txt` added
 - [ ] Converge completed — real tool rows in Postgres
 - [ ] All three attack types tested end-to-end with real tools

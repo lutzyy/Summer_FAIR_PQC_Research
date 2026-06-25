@@ -55,6 +55,40 @@ Your containers live in the sealed lab. They can talk to each other and nothing 
 
 ---
 
+## Safety & isolation (read every session)
+
+This project uses **recorded botnet pcaps** and attack tools for **defensive research only**. They must stay inside a sealed Docker lab — never on the open network, never in GitHub.
+
+### When to run the safety check
+
+Run **`bash verify-lab-safety.sh`** from `adversary/tools/`:
+
+- **Every time** you connect to MIDAS 2 and before any attack or pcap replay
+- **Again** after you add or change anything: a new pcap, container, config, `tools.py`, `Dockerfile`, or network setting
+
+Do not run `tools.py` or `tcpreplay` on the MIDAS 2 host — **only** inside the `attacker` container via `docker exec`.
+
+Full checklist: `Instructions/lab_safety_checklist.md`
+
+### Rules you must follow
+
+1. **`lab-net` is `--internal`** — no route to the internet. Re-verify with the script after every change.
+2. **`practice-target` and `attacker` live only on `lab-net`.** Never attach them to `bridge` or the host network.
+3. **Pcaps stay local** — copy from `/shared/zareen_research/captures/` into `captures/` only. Never commit them (`captures/` and `*.pcap` are gitignored).
+4. **Replay targets lab only** — always `practice-target:443` (or another container on `lab-net`), never external hosts.
+5. **Never commit** `target-certs/`, `*.pem`, `.env`, or pcaps.
+
+### Quick safety commands (manual)
+
+```bash
+cd ~/Summer_FAIR_PQC_Research/adversary/tools
+bash verify-lab-safety.sh
+```
+
+If any check **FAILs**, stop and fix before continuing.
+
+---
+
 ## Tools you'll use — what, why, and what's already set up
 
 You don't install Docker yourself — on MIDAS 2 you don't have admin rights, so **the server admin installs Docker and adds you to the `docker` group.** Your job is just to confirm it works. Everything else is either a Docker image (downloaded automatically) or baked into your attacker box by the Dockerfile in Step 5.
@@ -355,6 +389,7 @@ When you edit `tools.py` in Cursor, just re-run the command — no rebuild neede
 
 ## Step 9 — You're done when you can tick all of these
 
+- [ ] `bash verify-lab-safety.sh` passes (all checks green)
 - [ ] `docker --version`, `docker ps`, and `docker run --rm hello-world` all work without a permission error
 - [ ] `lab-net` exists and the "ping the internet" test **fails**
 - [ ] `practice-target` is running on `lab-net`
@@ -377,7 +412,8 @@ docker exec attacker python3 /opt/redteam/tools.py detect practice-target:443
 …capture the JSON line you print, and save it to the database. Your job at converge is to:
 
 1. Sit with Sebastian and confirm your tools' output keys match `../brain/contract.py` exactly.
-2. Confirm your three commands still each print exactly one JSON line (Sebastian reads the **last** line of output, so don't print anything else to stdout).
-3. Watch the first full run together: the agent picks a tool, runs *your* tool via `docker exec`, and a row appears in the database. That's the milestone.
+2. Run `bash verify-lab-safety.sh` together — all checks must **PASS**.
+3. Confirm your three commands still each print exactly one JSON line (Sebastian reads the **last** line of output, so don't print anything else to stdout).
+4. Watch the first full run together: the agent picks a tool, runs *your* tool via `docker exec`, and a row appears in the database. That's the milestone.
 
 If something breaks at converge, it's almost always one of two things: the JSON keys don't match the contract, or a tool printed extra text before the JSON. Both are quick fixes on your side.

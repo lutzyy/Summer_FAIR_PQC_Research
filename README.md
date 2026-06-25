@@ -95,6 +95,8 @@ The first build target is the **adversary agent**. It's being built by two stude
 
 The two halves meet through one shared contract (`adversary/brain/contract.py`): every tool emits the same four-field JSON record, and the agent stores it. As long as that contract holds, the pieces fit together.
 
+**Safety:** Before every MIDAS 2 session or lab change, run `bash adversary/tools/verify-lab-safety.sh`. See `Instructions/lab_safety_checklist.md`.
+
 ## Roadmap
 
 - **Q1 — Foundation:** servers and base infrastructure; one persona talking to one EHR; one attack running against it; the orchestrator records the result.

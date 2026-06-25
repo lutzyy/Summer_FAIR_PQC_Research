@@ -2,7 +2,30 @@
 
 **Your role:** Tools & Targets (`adversary/tools/`)  
 **Working folder:** `~/Summer_FAIR_PQC_Research/adversary/tools` on MIDAS 2  
-**Runbook reference:** `Instructions/stefan_tools_and_targets (1).md`
+**Runbook reference:** `Instructions/stefan_tools_and_targets (1).md`  
+**Safety reference:** `Instructions/lab_safety_checklist.md`
+
+---
+
+## Safety first — every MIDAS 2 session
+
+Before any attack, pcap replay, or lab work, run:
+
+```bash
+cd ~/Summer_FAIR_PQC_Research/adversary/tools
+bash verify-lab-safety.sh
+```
+
+**Run this again** whenever you add or change: a pcap, container, `tools.py`, `Dockerfile`, `nginx.conf`, certs, or network settings.
+
+| Rule | Why |
+|------|-----|
+| Tools run **only** via `docker exec attacker` | Host is not sealed; pcaps must not execute on MIDAS 2 directly |
+| `lab-net` must stay `--internal` | Blocks internet egress from the attack lab |
+| Pcaps/certs **never** committed | Botnet captures stay on server only (gitignored) |
+| Replay only at `practice-target` on `lab-net` | Traffic stays inside the fake hospital |
+
+If the script prints **FAIL**, stop and fix before continuing.
 
 ---
 
@@ -34,7 +57,8 @@ Sebastian finished his brain half on Jun 20 and marked Step 9 done. His `agent.p
 ### Day 1 (Thu Jun 25) — Confirm access and folder setup
 
 - [ ] Connect to MIDAS 2 via Cursor (see `Instructions/midas2_cursor_setup_guide.md`).
-- [ ] `git pull` on `main` — confirm you see Sebastian's `adversary/brain/` files.
+- [ ] `git pull` on `main` — confirm you have `verify-lab-safety.sh` and the safety checklist.
+- [ ] After the lab is up (Days 2–3), run `bash verify-lab-safety.sh` — **repeat at the start of every future session**.
 - [ ] Confirm Docker works:
   ```bash
   docker --version
@@ -102,8 +126,9 @@ Sebastian finished his brain half on Jun 20 and marked Step 9 done. His `agent.p
   docker exec attacker ping -c 2 practice-target   # must SUCCEED
   docker exec attacker ping -c 2 8.8.8.8            # must FAIL
   ```
+- [ ] Run `bash verify-lab-safety.sh` — must pass before Day 4 tool tests.
 
-**Done when:** Attacker reaches the target but not the internet.
+**Done when:** Attacker reaches the target but not the internet, and safety script passes.
 
 ---
 
@@ -130,7 +155,9 @@ For each output, verify these keys exist and match `../brain/contract.py`:
 
 **If something fails:** fix `tools.py` in Cursor and re-run — no rebuild needed (folder is mounted).
 
-**Done when:** All three tools pass. Tick every item in Step 9 of your runbook.
+- [ ] **After all three tool tests:** run `bash verify-lab-safety.sh` again (required after any code or pcap change).
+
+**Done when:** All three tools pass and safety script passes. Tick every item in Step 9 of your runbook.
 
 ---
 
@@ -153,7 +180,8 @@ This is a joint milestone, not solo work.
 
 ### Your checklist on converge day
 
-1. [ ] `docker ps` — `practice-target` and `attacker` are running.
+1. [ ] Run `bash verify-lab-safety.sh` together — all checks must **PASS**.
+2. [ ] `docker ps` — `practice-target` and `attacker` are running.
 2. [ ] Re-run one tool test live so Sebastian can see the JSON:
    ```bash
    docker exec attacker python3 /opt/redteam/tools.py detect practice-target:443
@@ -207,11 +235,11 @@ if ! docker ps --filter name=attacker --format '{{.Names}}' | grep -q attacker; 
     redteam-attacker
 fi
 
-echo "Lab ready. Test with:"
-echo "  docker exec attacker python3 /opt/redteam/tools.py detect practice-target:443"
+echo "Running safety checks..."
+bash "$(dirname "$0")/verify-lab-safety.sh"
 ```
 
-- [ ] Write and test `start-lab.sh`
+- [ ] Write and test `start-lab.sh` (must call `verify-lab-safety.sh` at the end)
 - [ ] Add a matching `stop-lab.sh` (`docker stop practice-target attacker`)
 - [ ] Commit on branch `student1-tools`, open PR to `main`
 
@@ -233,6 +261,7 @@ The runbook mentions swapping nginx for an Open Quantum Safe demo server later. 
 ### Day 10 (Jul 8–9) — Additional captures and wrap-up
 
 - [ ] Copy a second pcap from `/shared/zareen_research/captures/` (Bashlite or Torii) into `captures/`.
+- [ ] **Run `bash verify-lab-safety.sh` before first replay of the new pcap.**
 - [ ] Test replay with the new capture:
   ```bash
   docker exec attacker python3 /opt/redteam/tools.py replay practice-target:443 /opt/redteam/captures/bashlite.pcap
@@ -260,6 +289,7 @@ git push -u origin student1-tools
 
 ## Success criteria (end of Jul 9)
 
+- [ ] `verify-lab-safety.sh` passes reliably; `start-lab.sh` runs it automatically
 - [ ] Step 9 checklist fully complete on MIDAS 2
 - [ ] Converge completed — real rows (not `stub_`) in Postgres
 - [ ] `start-lab.sh` lets anyone bring the lab up in one command

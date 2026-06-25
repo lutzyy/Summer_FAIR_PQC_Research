@@ -49,6 +49,37 @@ Your `vLLM` and `Postgres` containers use normal Docker networking with publishe
 
 ---
 
+## Safety & isolation (read every session)
+
+Stefan's lab uses **recorded botnet pcaps** replayed inside a sealed network. Your `brain` and `records` containers must **never** join that network. You trigger attacks only through `agent.py`, which runs tools inside Stefan's sealed `attacker` box via `docker exec` — never by running attack commands on the MIDAS 2 host.
+
+### When to run the safety check
+
+Before **every** MIDAS 2 session, and **again** after any Docker or lab change (new container, config, pcap, or before enabling real tools):
+
+```bash
+cd ~/Summer_FAIR_PQC_Research/adversary/tools
+bash verify-lab-safety.sh
+```
+
+Do **not** set `USE_REAL_TOOLS=1` or swap in real `_execute` until the script passes. If Stefan's lab is down, use stub mode only.
+
+Full checklist: `Instructions/lab_safety_checklist.md`
+
+### Rules you must follow
+
+1. **Never attach `brain` or `records` to `lab-net`.** They stay on normal Docker networking (`localhost:8000`, `localhost:5432`).
+2. **Never run `tools.py` or `tcpreplay` on the host.** Only Stefan's `attacker` container runs attack tools.
+3. **Real attacks only after safety checks pass** — confirm with Stefan that `verify-lab-safety.sh` is green before converge or real agent runs.
+4. **Never commit** `.env`, database dumps, or anything under `captures/` / `pgdata/`.
+5. **Python `venv` is not isolation** — it only isolates Python packages, not network traffic.
+
+### Your role at converge
+
+Before the first real agent run, run `verify-lab-safety.sh` together with Stefan. If any check fails, do not enable real tools.
+
+---
+
 ## Tools you'll use — what, why, and what's already set up
 
 On MIDAS 2 you don't have admin rights, so the heavy pieces are provided for you and you just verify them. The only things you install yourself are two Python packages, inside your own virtual environment.
@@ -373,6 +404,7 @@ You should see a `stub_...` row. That means your full half works: thinking → t
 
 ## Step 9 — You're done when you can tick all of these
 
+- [ ] `bash verify-lab-safety.sh` passes before every session using real tools (ongoing requirement)
 - [DONE] `docker --version` / `docker ps` work, and `docker run --gpus all` sees an A40
 - [DONE] `brain` is serving — `curl localhost:8000/v1/models` returns the model name
 - [DONE] `records` is running and the `runs` table exists
@@ -412,6 +444,7 @@ def _execute(target: str, attack: str) -> dict:
 Everything else stays the same — the tool still builds a `RunRecord` and saves it. Because Stefan's tools print the same JSON keys your `RunRecord` expects, it just works.
 
 Steps for the day:
+0. Run `bash verify-lab-safety.sh` together — all checks must **PASS** before real tools.
 1. Confirm Stefan's tools output the keys defined in your `contract.py`.
 2. Make sure Stefan's `attacker` and `practice-target` containers are running (`docker ps`).
 3. Swap in the real `_execute` above and run `python3 agent.py`.

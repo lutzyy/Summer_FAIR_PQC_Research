@@ -97,6 +97,8 @@ The two halves meet through one shared contract (`adversary/brain/contract.py`):
 
 **Safety:** Before every MIDAS 2 session or lab change, run `bash adversary/tools/verify-lab-safety.sh`. See `Instructions/lab_safety_checklist.md`.
 
+**Converge:** Students prepare through July 9; live integration is **week of July 13** with the project lead present. See `Instructions/converge_day.md`.
+
 ## Roadmap
 
 - **Q1 — Foundation:** servers and base infrastructure; one persona talking to one EHR; one attack running against it; the orchestrator records the result.

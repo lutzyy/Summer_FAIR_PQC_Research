@@ -44,11 +44,13 @@ Sebastian finished his brain half on Jun 20 and marked Step 9 done. His `agent.p
 
 ---
 
-## The goal for these two weeks
+## The goal for these two weeks (prep only — no converge yet)
 
-1. **Week 1:** Deploy and verify the sealed lab on MIDAS 2 (Steps 1–8 from your runbook).
-2. **End of Week 1 / start of Week 2:** Converge day with Sebastian — first real end-to-end attack.
-3. **Week 2:** Harden the lab, add a PQC practice target, and document how to start everything.
+**Converge is scheduled for the week of July 13 with Dr. Zareen present.** Do not wire Sebastian's agent to your real tools before that session.
+
+1. **Week 1 (Jun 25 – Jul 1):** Deploy and verify the sealed lab on MIDAS 2 (Steps 1–8 from your runbook).
+2. **Week 2 (Jul 2 – Jul 9):** Harden the lab (`start-lab.sh`), optional PQC target, second pcap — stay ready for converge.
+3. **Week of Jul 13:** Converge live with Dr. Zareen + Sebastian (see `Instructions/converge_day.md`).
 
 ---
 
@@ -161,53 +163,22 @@ For each output, verify these keys exist and match `../brain/contract.py`:
 
 ---
 
-### Day 5 (Wed Jul 1) — Prep for converge + message Sebastian
+### Day 5 (Wed Jul 1) — Lab ready report (do not converge yet)
 
 - [ ] Confirm all containers are still running: `docker ps` should show `practice-target` and `attacker`.
-- [ ] Send Sebastian (or post in Teams) a short status:
-  - Containers are up
+- [ ] Run `bash verify-lab-safety.sh` one final time.
+- [ ] Message Dr. Zareen and Sebastian on Teams:
+  - Lab is up and safety checks pass
   - All three tools tested and returning valid JSON
-  - You're ready for converge
-- [ ] Schedule converge for Thu Jul 2 or Fri Jul 3 (see Sebastian's doc — you both need to be on MIDAS 2 at the same time).
+  - You are ready for **converge week of July 13** (not before)
 
-**Do not change your code for converge.** Sebastian's agent will call the exact `docker exec` commands you tested in Day 4.
-
----
-
-## Converge day (Thu Jul 2 or Fri Jul 3) — ~1 hour with Sebastian
-
-This is a joint milestone, not solo work.
-
-### Your checklist on converge day
-
-1. [ ] Run `bash verify-lab-safety.sh` together — all checks must **PASS**.
-2. [ ] `docker ps` — `practice-target` and `attacker` are running.
-2. [ ] Re-run one tool test live so Sebastian can see the JSON:
-   ```bash
-   docker exec attacker python3 /opt/redteam/tools.py detect practice-target:443
-   ```
-3. [ ] Confirm your JSON keys match `adversary/brain/contract.py` exactly.
-4. [ ] Watch Sebastian run `python3 agent.py` with real tools wired in.
-5. [ ] Confirm a **non-`stub_`** row appears in Postgres:
-   ```bash
-   docker exec -i records psql -U postgres -c \
-     "SELECT attack_name, crypto_detected, outcome_notes FROM runs ORDER BY timestamp DESC LIMIT 3;"
-   ```
-
-### If converge breaks
-
-| Symptom | Likely cause | Your fix |
-|---------|--------------|----------|
-| `attacker` container not found | Container stopped | `docker start attacker` or re-run Day 3 |
-| JSON parse error | Extra stdout before JSON | Remove any `print()` calls in `tools.py` except the final `json.dumps` |
-| Key mismatch | Wrong key names in output | Match exactly: `crypto_detected` not `cypto_detected` |
-| `detect` returns unknown | Target not reachable | `docker exec attacker ping practice-target` |
+**Hold:** Do not run integration with Sebastian's real agent until the scheduled converge session with Dr. Zareen. See `Instructions/converge_day.md`.
 
 ---
 
-## Week 2 — Harden and extend (Jul 2 – Jul 9)
+## Week 2 — Harden the lab (Jul 2 – Jul 9)
 
-After converge succeeds, shift from "get it working" to "make it reliable and ready for the next project phase."
+**No converge this week.** Prepare everything so converge on **week of July 13** is a short, smooth session with Dr. Zareen.
 
 ### Days 6–7 (Jul 2–3) — Lab startup script
 
@@ -266,8 +237,11 @@ The runbook mentions swapping nginx for an Open Quantum Safe demo server later. 
   ```bash
   docker exec attacker python3 /opt/redteam/tools.py replay practice-target:443 /opt/redteam/captures/bashlite.pcap
   ```
-- [ ] Run a full end-to-end test with Sebastian's agent (all three attack types: detect, replay, craft).
-- [ ] Update Step 9 checklist in your runbook to `[DONE]` and commit any doc updates.
+- [ ] Re-run `bash verify-lab-safety.sh` after the new pcap test.
+- [ ] Confirm lab still starts cleanly with `start-lab.sh` (containers may have stopped over the week — that's fine).
+- [ ] Update Step 9 checklist in your runbook to `[DONE]`.
+
+**Do not** run Sebastian's agent with real tools yet — that happens at converge (`Instructions/converge_day.md`).
 
 ---
 
@@ -287,14 +261,24 @@ git push -u origin student1-tools
 
 ---
 
-## Success criteria (end of Jul 9)
+## Success criteria (end of Jul 9 — prep complete)
 
 - [ ] `verify-lab-safety.sh` passes reliably; `start-lab.sh` runs it automatically
 - [ ] Step 9 checklist fully complete on MIDAS 2
-- [ ] Converge completed — real rows (not `stub_`) in Postgres
-- [ ] `start-lab.sh` lets anyone bring the lab up in one command
-- [ ] At least one PQC or hybrid target tested (stretch)
-- [ ] Second botnet capture tested with `replay`
+- [ ] All three tools tested; optional PQC target and second pcap done
+- [ ] Dr. Zareen notified: lab ready for converge **week of July 13**
+
+**Not due until converge week:** real rows in Postgres, end-to-end run with Sebastian's agent.
+
+---
+
+## Converge week (Jul 13–19) — with Dr. Zareen
+
+See **`Instructions/converge_day.md`** for the full session checklist.
+
+**Your role:** Demo running lab, run `verify-lab-safety.sh`, demo one tool live. No code changes on your side.
+
+**Before the session:** Run `start-lab.sh` (or start containers manually) so `practice-target` and `attacker` are up when Dr. Zareen joins.
 
 ---
 
@@ -309,6 +293,6 @@ git push -u origin student1-tools
 
 ---
 
-## What comes after these two weeks
+## What comes after converge (week of Jul 13+)
 
-Once the adversary loop is solid end-to-end, the project moves toward Q1 foundation goals: connecting the adversary to a simulated hospital (EHR, personas) and an orchestrator that records graded results. Your tools will eventually attack real hospital services, not just nginx — but the contract and sealed-lab pattern stay the same.
+Once Dr. Zareen is present and the first end-to-end run succeeds, the project moves toward testing all attack types with the real agent, then Q1 foundation goals: connecting the adversary to a simulated hospital (EHR, personas) and an orchestrator that records graded results.

@@ -43,11 +43,13 @@ If the script prints **FAIL**, use stub mode and tell Stefan — do not run real
 
 ---
 
-## The goal for these two weeks
+## The goal for these two weeks (prep only — no converge yet)
 
-1. **Week 1:** Fix small bugs, verify infrastructure still healthy, coordinate converge with Stefan.
-2. **End of Week 1 / start of Week 2:** Converge day — swap stub for real tools, first real database row.
-3. **Week 2:** Improve the agent, test all attack types, prepare for multi-step attack loops.
+**Converge is scheduled for the week of July 13 with Dr. Zareen present.** Do not enable real tools or merge converge wiring to `main` before that session.
+
+1. **Week 1 (Jun 25 – Jul 1):** Fix small bugs, verify infrastructure, prep converge code locally (stub mode only).
+2. **Week 2 (Jul 2 – Jul 9):** `.env` for secrets, keep stub loop healthy, optional multi-step loop in **stub mode only**.
+3. **Week of Jul 13:** Converge live with Dr. Zareen + Stefan (see `Instructions/converge_day.md`).
 
 ---
 
@@ -126,22 +128,23 @@ psycopg[binary]
 
 ### Day 3 (Mon Jun 29) — Coordinate with Stefan
 
-Stefan's blocker is deploying the lab on MIDAS 2 (his Step 9). You cannot converge until his containers run.
+Stefan's blocker is deploying the lab on MIDAS 2 (his Step 9). You cannot converge until his containers run — and **converge itself waits until the week of July 13 with Dr. Zareen**.
 
 - [ ] Message Stefan (Teams) and confirm his timeline against `Instructions/stefan_next_two_weeks.md`.
 - [ ] Ask specifically:
   - Are `practice-target` and `attacker` running?
   - Did all three `docker exec` tool tests pass?
-  - When can you do converge (target: Thu Jul 2 or Fri Jul 3)?
+  - Does `verify-lab-safety.sh` pass?
+- [ ] Tell Dr. Zareen when Stefan confirms lab-ready (converge scheduling happens for **Jul 13–19**).
 - [ ] While waiting, read Stefan's `tools.py` and confirm it prints the four keys your `RunRecord` expects.
 
-**Done when:** Converge date is scheduled and Stefan confirms tools are tested.
+**Done when:** Stefan's lab is verified and you understand converge is **not** before Jul 13.
 
 ---
 
-### Days 4–5 (Tue–Wed Jun 30 – Jul 1) — Prep the converge change
+### Days 4–5 (Tue–Wed Jun 30 – Jul 1) — Prep the converge change (do not enable yet)
 
-Do not merge the converge change until Stefan's lab is verified. But prepare it locally so converge day is fast.
+Prepare locally so converge week is fast. **Keep stub mode as the default until Dr. Zareen is present on Jul 13+.**
 
 #### Option A (recommended): Environment variable toggle
 
@@ -164,91 +167,32 @@ def _execute(target: str, attack: str) -> dict:
 ```
 
 This lets you:
-- Develop with stubs: `python3 agent.py`
-- Converge with real tools: `USE_REAL_TOOLS=1 python3 agent.py`
+- Develop with stubs through Jul 9: `python3 agent.py`
+- Converge with Dr. Zareen (Jul 13+): `USE_REAL_TOOLS=1 python3 agent.py`
 
 #### Option B (runbook approach): Direct swap
 
-Change line 60 in `agent.py` from `_execute` to `real_execute` and delete the stub function.
+Change line 60 in `agent.py` from `_execute` to `real_execute` — **only on converge day**, not before.
 
-- [ ] Implement Option A or B locally (do not push converge wiring until Stefan is ready, unless using Option A with default `0`)
-- [ ] If using Option A, commit the toggle on `student2-brain` — it's safe because default is stub mode.
+- [ ] Implement Option A or B locally
+- [ ] If using Option A, you may commit the toggle on `student2-brain` — default stays stub (`USE_REAL_TOOLS=0`)
+- [ ] **Do not** run `USE_REAL_TOOLS=1` or push a direct swap until the converge session with Dr. Zareen
 
-**Done when:** Converge change is coded and ready to flip.
-
----
-
-## Converge day (Thu Jul 2 or Fri Jul 3) — ~1 hour with Stefan
-
-### Pre-flight (you do this first)
-
-```bash
-docker ps    # brain, records, practice-target, attacker all running
-curl http://localhost:8000/v1/models
-cd ~/Summer_FAIR_PQC_Research/adversary/tools && bash verify-lab-safety.sh
-```
-
-All safety checks must **PASS** before enabling real tools.
-
-### Converge steps
-
-1. [ ] Stefan demonstrates all three tools returning clean JSON.
-2. [ ] Confirm JSON keys match your `contract.py` (`crypto_detected`, not `cypto_detected`).
-3. [ ] Enable real tools:
-   - **Option A:** `USE_REAL_TOOLS=1 python3 agent.py`
-   - **Option B:** Change `run_attack` to call `real_execute`, commit on branch `converge`
-4. [ ] Watch the agent run. It should call Stefan's tool via `docker exec`.
-5. [ ] Verify a real row in Postgres:
-   ```bash
-   docker exec -i records psql -U postgres -c \
-     "SELECT attack_name, crypto_detected, outcome_notes FROM runs ORDER BY timestamp DESC LIMIT 3;"
-   ```
-   Expected: `tls_probe`, `pcap_replay`, or `scapy_syn_probe` — **not** `stub_detect`.
-6. [ ] Commit and push:
-   ```bash
-   git checkout -b converge
-   git add adversary/brain/agent.py
-   git commit -m "Wire agent to real tools — first end-to-end run"
-   git push -u origin converge
-   ```
-7. [ ] Open PR to `main`. This commit is the project milestone.
-
-### If converge breaks
-
-| Symptom | Likely cause | Fix |
-|---------|--------------|-----|
-| `Could not parse tool output` | Extra stdout from `tools.py` | Stefan removes stray prints |
-| `attacker` not found | Container not running | Stefan runs `start-lab.sh` or Day 3 commands |
-| Model doesn't call tool | vLLM tool-calling flags | Check `--enable-auto-tool-choice --tool-call-parser hermes` on brain container |
-| `stub_` row still appears | Wrong execute function called | Confirm `USE_REAL_TOOLS=1` or `real_execute` is wired |
-| DB connection error | `records` container down | `docker start records` |
+**Done when:** Converge change is coded and ready to flip on Jul 13+.
 
 ---
 
-## Week 2 — Improve the agent (Jul 2 – Jul 9)
+## Week 2 — Prep and stub-only improvements (Jul 2 – Jul 9)
 
-After converge, the adversary "works" but is still minimal: one tool call, one record, one report. Week 2 makes it more capable and production-ready.
+**No converge this week. No real tools.** Continue stub testing only until the session with Dr. Zareen.
 
-### Days 6–7 (Jul 2–3) — Test all three attack types end-to-end
+### Days 6–7 (Jul 2–3) — Keep infrastructure healthy
 
-Run the agent three times with goals that steer it toward each attack:
+- [ ] At each MIDAS session: confirm `brain` and `records` running, run stub `python3 agent.py`
+- [ ] Confirm Stefan's lab status — he should finish Step 9 and `start-lab.sh` this week
+- [ ] Do **not** enable real tools yet
 
-```bash
-cd ~/Summer_FAIR_PQC_Research/adversary/brain
-source venv/bin/activate
-USE_REAL_TOOLS=1 python3 -c "
-from agent import agent
-agent.run_sync('Target practice-target:443. Run detect to inspect the TLS crypto and report.')
-"
-# Repeat with goals mentioning replay and craft
-```
-
-- [ ] Confirm `tls_probe` row from detect
-- [ ] Confirm `pcap_replay` row from replay
-- [ ] Confirm `scapy_syn_probe` row from craft
-- [ ] Log any cases where the model picks the wrong attack or fails to call the tool
-
-**Done when:** All three attack types produce real database rows.
+**Done when:** Your stub loop still works and Stefan reports lab-ready.
 
 ---
 
@@ -270,29 +214,15 @@ Hardcoded `changeme` in `db.py` is fine for the lab but should not stay in commi
 
 ---
 
-### Days 9–10 (Jul 7–9) — Multi-step agent loop (stretch toward Q1)
+### Days 9–10 (Jul 7–9) — Multi-step agent loop in stub mode (stretch)
 
-The current agent calls one tool per run. The project eventually needs: detect crypto → choose attack → run attack → grade result. Start the first expansion:
+Practice the detect-then-attack pattern using **stubs only** before converge:
 
-- [ ] Update `main()` to accept a CLI goal argument:
-  ```python
-  import sys
-  def main():
-      goal = sys.argv[1] if len(sys.argv) > 1 else (
-          "Target practice-target:443. Detect the crypto, then run one further attack, then summarize."
-      )
-      result = agent.run_sync(goal)
-      print("\n--- agent report ---\n", result.output)
-  ```
-- [ ] Change the system prompt to allow **two** tool calls when the goal requires detect-then-attack:
-  ```
-  Given a target, you may call run_attack up to twice: first 'detect' to inspect crypto,
-  then one of 'replay' or 'craft' based on what you learned. Save happens automatically.
-  ```
-- [ ] Test a two-step run and confirm **two** rows in Postgres (one `tls_probe`, one follow-up).
-- [ ] Commit on `student2-brain`, open PR.
+- [ ] Update `main()` to accept a CLI goal argument (see previous template in this doc)
+- [ ] Test a two-step stub run — confirm **two** `stub_` rows in Postgres
+- [ ] Commit on `student2-brain`, open PR
 
-**Done when:** Agent can detect then attack in one session with two saved records.
+**Done when:** Two-step stub loop works. Real two-step loop happens **after** converge.
 
 ---
 
@@ -313,14 +243,30 @@ git push -u origin student2-brain
 
 ---
 
-## Success criteria (end of Jul 9)
+## Success criteria (end of Jul 9 — prep complete)
 
-- [ ] `verify-lab-safety.sh` run at start of every MIDAS session before real tool use
+- [ ] `verify-lab-safety.sh` run at start of every MIDAS session
 - [ ] Contract typo fixed, `requirements.txt` added
-- [ ] Converge completed — real tool rows in Postgres
-- [ ] All three attack types tested end-to-end with real tools
-- [ ] DB password moved to `.env` (not in committed code)
-- [ ] Agent supports at least a detect-then-attack two-step loop
+- [ ] Converge wiring prepared (toggle or swap ready) — **still in stub mode**
+- [ ] Stub loop and optional two-step stub loop work
+- [ ] DB password moved to `.env` (stretch)
+
+**Not due until converge week (Jul 13+):** real tool rows, end-to-end with Stefan, converge PR merged.
+
+---
+
+## Converge week (Jul 13–19) — with Dr. Zareen
+
+See **`Instructions/converge_day.md`** for the full session checklist.
+
+**Your role:** Enable real tools during the session (`USE_REAL_TOOLS=1` or swap to `real_execute`), run `agent.py`, confirm real Postgres row, open converge PR.
+
+**Hold until this session:** Do not enable real tools on your own before Dr. Zareen is present.
+
+### After converge (same week or following week)
+
+- [ ] Test all three attack types (`detect`, `replay`, `craft`) with real tools
+- [ ] Multi-step loop with real tools (detect then attack)
 - [ ] Converge PR merged to `main`
 
 ---
@@ -336,9 +282,9 @@ git push -u origin student2-brain
 
 ---
 
-## What comes after these two weeks
+## What comes after converge (week of Jul 13+)
 
-The adversary agent will need a **grading** component (did the attack succeed? was crypto broken?) — that's the second agent mentioned in the README. After your two-step loop works, the next build target is likely:
+The adversary agent will need a **grading** component (did the attack succeed? was crypto broken?) — that's the second agent mentioned in the README. After the converge session with Dr. Zareen:
 
 1. A grading function that reads `RunRecord` and assigns success/failure.
 2. Wiring the adversary to attack a real hospital service (once the `lab/` folder exists).

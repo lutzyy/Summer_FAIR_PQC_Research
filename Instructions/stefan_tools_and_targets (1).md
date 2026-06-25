@@ -403,6 +403,8 @@ When you edit `tools.py` in Cursor, just re-run the command — no rebuild neede
 
 ## Converge day — handing your half to Sebastian
 
+**Scheduled: week of July 13, 2026, with Dr. Zareen present.** Do not attempt integration before that session. See `Instructions/converge_day.md`.
+
 Nothing about your code changes at converge. Sebastian's agent will simply run the exact commands you tested in Step 8:
 
 ```bash

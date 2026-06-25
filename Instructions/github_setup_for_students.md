@@ -203,6 +203,8 @@ git merge main
 
 ## Converge day in Git
 
+**Scheduled: week of July 13, 2026, with Dr. Zareen present.** Students prepare through July 9; integration happens in one supervised session. See `Instructions/converge_day.md`.
+
 When both halves work on their own branches, joining them is a tracked, low-drama step:
 
 1. Merge both branches into `main` (through pull requests). Because Student 1's files live in `adversary/tools/` and Student 2's in `adversary/brain/`, they don't touch the same files — so there are no conflicts.

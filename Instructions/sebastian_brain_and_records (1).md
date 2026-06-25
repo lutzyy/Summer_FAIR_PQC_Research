@@ -416,7 +416,9 @@ You should see a `stub_...` row. That means your full half works: thinking → t
 
 ## Converge day — connecting to Stefan's real tools
 
-This is a **one-function change**. Replace the fake `_execute` in `agent.py` with the real version that calls Stefan's tool inside the sealed attacker container:
+**Scheduled: week of July 13, 2026, with Dr. Zareen present.** Do not enable real tools or merge converge wiring before that session. See `Instructions/converge_day.md`.
+
+This is a **one-function change** (during the session with Dr. Zareen). Replace the fake `_execute` in `agent.py` with the real version that calls Stefan's tool inside the sealed attacker container:
 
 ```python
 def _execute(target: str, attack: str) -> dict:
@@ -443,7 +445,7 @@ def _execute(target: str, attack: str) -> dict:
 
 Everything else stays the same — the tool still builds a `RunRecord` and saves it. Because Stefan's tools print the same JSON keys your `RunRecord` expects, it just works.
 
-Steps for the day:
+Steps for the day (with Dr. Zareen present):
 0. Run `bash verify-lab-safety.sh` together — all checks must **PASS** before real tools.
 1. Confirm Stefan's tools output the keys defined in your `contract.py`.
 2. Make sure Stefan's `attacker` and `practice-target` containers are running (`docker ps`).

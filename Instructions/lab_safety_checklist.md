@@ -4,6 +4,8 @@
 
 Do **not** run attacks, replay pcaps, or enable real tools in the agent until every check passes.
 
+**Converge (connecting Sebastian's agent to Stefan's real tools)** is scheduled for the **week of July 13, 2026, with Dr. Zareen present** — not before. See `Instructions/converge_day.md`.
+
 ---
 
 ## Why this matters
@@ -101,7 +103,7 @@ Expected: no `captures/`, `*.pcap`, `target-certs/`, `.env`, or `*.pem` listed. 
 | Changed `tools.py` / `Dockerfile` | **Yes** | Rebuild image if Dockerfile changed |
 | New target container | **Yes** | New container must use `--network lab-net` only |
 | Restarted containers | **Yes** | Confirm networks unchanged |
-| Sebastian enabled real tools | **Yes** | Stefan confirms lab checks pass first |
+| Sebastian enabled real tools | **Yes** | Only at converge (week of Jul 13) with Dr. Zareen; Stefan confirms lab checks pass first |
 
 ---
 

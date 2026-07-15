@@ -9,6 +9,10 @@ import sys, json, subprocess
 
 
 def detect_crypto(target: str) -> dict:
+    """Probe TLS. Captures protocol, ciphersuite, key-share group, and
+    signature type so classical RSA/ECDHE and PQC/hybrid (e.g. ML-KEM,
+    ML-DSA) targets are distinguishable in crypto_detected.
+    """
     host, _, port = target.partition(":")
     port = port or "443"
     proc = subprocess.run(
@@ -16,17 +20,25 @@ def detect_crypto(target: str) -> dict:
         input="", capture_output=True, text=True, timeout=15,
     )
     out = proc.stdout + proc.stderr
-    proto = cipher = "unknown"
+    proto = cipher = group = sig = "unknown"
     for line in out.splitlines():
         s = line.strip()
+        low = s.lower()
         if s.startswith("Protocol"):
-            proto = s.split(":")[-1].strip()
-        if s.startswith("Ciphersuite") or s.startswith("Cipher"):
-            cipher = s.split(":")[-1].strip()
+            proto = s.split(":", 1)[-1].strip()
+        elif s.startswith("Ciphersuite") or (
+            s.startswith("Cipher") and "Ciphersuite" not in s
+        ):
+            cipher = s.split(":", 1)[-1].strip()
+        elif "negotiated tls1.3 group" in low or s.startswith("Server Temp Key"):
+            group = s.split(":", 1)[-1].strip()
+        elif low.startswith("signature type") or low.startswith("peer signature type"):
+            sig = s.split(":", 1)[-1].strip()
     ok = proto != "unknown"
+    crypto = f"{proto} / {cipher} / group={group} / sig={sig}"
     return {
         "attack_name": "tls_probe",
-        "crypto_detected": f"{proto} / {cipher}",
+        "crypto_detected": crypto,
         "attack_params": {"target": target},
         "outcome_notes": "Handshake completed." if ok else "Could not read handshake.",
     }

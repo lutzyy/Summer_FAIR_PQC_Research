@@ -26,7 +26,7 @@ else
 fi
 
 # 2. practice-target on lab-net only
-if docker ps --filter name=practice-target --format '{{.Names}}' | grep -q practice-target; then
+if docker ps --filter name=^practice-target$ --format '{{.Names}}' | grep -qx practice-target; then
   NETS=$(docker inspect practice-target --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}')
   if [ "$NETS" = "lab-net " ] || [ "$NETS" = "lab-net" ]; then
     pass "practice-target is on lab-net only"
@@ -37,8 +37,20 @@ else
   fail "practice-target is not running"
 fi
 
+# 2b. practice-target-pqc on lab-net only (optional stretch — warn if missing)
+if docker ps --filter name=^practice-target-pqc$ --format '{{.Names}}' | grep -qx practice-target-pqc; then
+  NETS=$(docker inspect practice-target-pqc --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}')
+  if [ "$NETS" = "lab-net " ] || [ "$NETS" = "lab-net" ]; then
+    pass "practice-target-pqc is on lab-net only"
+  else
+    fail "practice-target-pqc networks: '$NETS' (expected lab-net only)"
+  fi
+else
+  pass "practice-target-pqc not running (optional PQC target)"
+fi
+
 # 3. attacker on lab-net only
-if docker ps --filter name=attacker --format '{{.Names}}' | grep -q attacker; then
+if docker ps --filter name=^attacker$ --format '{{.Names}}' | grep -qx attacker; then
   NETS=$(docker inspect attacker --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}')
   if [ "$NETS" = "lab-net " ] || [ "$NETS" = "lab-net" ]; then
     pass "attacker is on lab-net only"
@@ -74,7 +86,7 @@ else
 fi
 
 # 6. attacker cannot reach internet
-if docker ps --filter name=attacker --format '{{.Names}}' | grep -q attacker; then
+if docker ps --filter name=^attacker$ --format '{{.Names}}' | grep -qx attacker; then
   if docker exec attacker ping -c 2 -W 3 8.8.8.8 >/dev/null 2>&1; then
     fail "attacker can reach the internet — lab is NOT sealed"
   else
@@ -83,11 +95,18 @@ if docker ps --filter name=attacker --format '{{.Names}}' | grep -q attacker; th
 fi
 
 # 7. attacker can reach practice-target
-if docker ps --filter name=attacker --format '{{.Names}}' | grep -q attacker; then
+if docker ps --filter name=^attacker$ --format '{{.Names}}' | grep -qx attacker; then
   if docker exec attacker ping -c 2 -W 3 practice-target >/dev/null 2>&1; then
     pass "attacker can reach practice-target"
   else
     fail "attacker cannot reach practice-target"
+  fi
+  if docker ps --filter name=^practice-target-pqc$ --format '{{.Names}}' | grep -qx practice-target-pqc; then
+    if docker exec attacker ping -c 2 -W 3 practice-target-pqc >/dev/null 2>&1; then
+      pass "attacker can reach practice-target-pqc"
+    else
+      fail "attacker cannot reach practice-target-pqc"
+    fi
   fi
 fi
 

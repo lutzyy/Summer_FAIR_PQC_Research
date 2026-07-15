@@ -58,16 +58,16 @@ Sebastian finished his brain half on Jun 20 and marked Step 9 done. His `agent.p
 
 ### Day 1 (Thu Jun 25) — Confirm access and folder setup
 
-- [ ] Connect to MIDAS 2 via Cursor (see `Instructions/midas2_cursor_setup_guide.md`).
-- [ ] `git pull` on `main` — confirm you have `verify-lab-safety.sh` and the safety checklist.
-- [ ] After the lab is up (Days 2–3), run `bash verify-lab-safety.sh` — **repeat at the start of every future session**.
-- [ ] Confirm Docker works:
+- [DONE] Connect to MIDAS 2 via Cursor (see `Instructions/midas2_cursor_setup_guide.md`).
+- [DONE] `git pull` on `main` — confirm you have `verify-lab-safety.sh` and the safety checklist.
+- [DONE] After the lab is up (Days 2–3), run `bash verify-lab-safety.sh` — **repeat at the start of every future session**.
+- [DONE] Confirm Docker works:
   ```bash
   docker --version
   docker ps
   docker run --rm hello-world
   ```
-- [ ] Go to your folder and create captures:
+- [DONE] Go to your folder and create captures:
   ```bash
   cd ~/Summer_FAIR_PQC_Research/adversary/tools
   mkdir -p captures target-certs
@@ -80,23 +80,23 @@ Sebastian finished his brain half on Jun 20 and marked Step 9 done. His `agent.p
 
 ### Day 2 (Fri Jun 26) — Sealed network and practice target
 
-- [ ] Create the sealed network:
+- [DONE] Create the sealed network:
   ```bash
   docker network create --internal lab-net
   ```
   (If it already exists, skip — `docker network ls` to check.)
-- [ ] Prove the wall works (this **must fail**):
+- [DONE] Prove the wall works (this **must fail**):
   ```bash
   docker run --rm --network lab-net alpine ping -c 2 8.8.8.8
   ```
-- [ ] Generate target TLS certs:
+- [DONE] Generate target TLS certs:
   ```bash
   openssl req -x509 -newkey rsa:2048 -nodes \
     -keyout target-certs/key.pem \
     -out target-certs/cert.pem \
     -days 365 -subj "/CN=practice-target"
   ```
-- [ ] Start `practice-target`:
+- [DONE] Start `practice-target`:
   ```bash
   docker run -d --name practice-target --network lab-net \
     -v "$PWD/target-certs":/certs:ro \
@@ -111,24 +111,24 @@ Sebastian finished his brain half on Jun 20 and marked Step 9 done. His `agent.p
 
 ### Day 3 (Mon Jun 29) — Build and run the attacker container
 
-- [ ] Build the attacker image:
+- [DONE] Build the attacker image:
   ```bash
   cd ~/Summer_FAIR_PQC_Research/adversary/tools
   docker build -t redteam-attacker .
   ```
-- [ ] Start the attacker (sealed on `lab-net`):
+- [DONE] Start the attacker (sealed on `lab-net`):
   ```bash
   docker run -d --name attacker --network lab-net \
     --cap-add=NET_RAW --cap-add=NET_ADMIN \
     -v "$PWD":/opt/redteam \
     redteam-attacker
   ```
-- [ ] Verify isolation:
+- [DONE] Verify isolation:
   ```bash
   docker exec attacker ping -c 2 practice-target   # must SUCCEED
   docker exec attacker ping -c 2 8.8.8.8            # must FAIL
   ```
-- [ ] Run `bash verify-lab-safety.sh` — must pass before Day 4 tool tests.
+- [DONE] Run `bash verify-lab-safety.sh` — must pass before Day 4 tool tests.
 
 **Done when:** Attacker reaches the target but not the internet, and safety script passes.
 
@@ -150,14 +150,14 @@ For each output, verify these keys exist and match `../brain/contract.py`:
 - `attack_params` (must include `target`)
 - `outcome_notes`
 
-- [ ] `detect` returns a real TLS protocol and cipher (not `unknown / unknown`)
-- [ ] `replay` completes without a tool error
-- [ ] `craft` returns a TCP response note
-- [ ] No extra lines printed before the JSON (Sebastian reads the **last** line of stdout)
+- [DONE] `detect` returns a real TLS protocol and cipher (not `unknown / unknown`)
+- [DONE] `replay` completes without a tool error
+- [DONE] `craft` returns a TCP response note
+- [DONE] No extra lines printed before the JSON (Sebastian reads the **last** line of stdout)
 
 **If something fails:** fix `tools.py` in Cursor and re-run — no rebuild needed (folder is mounted).
 
-- [ ] **After all three tool tests:** run `bash verify-lab-safety.sh` again (required after any code or pcap change).
+- [DONE] **After all three tool tests:** run `bash verify-lab-safety.sh` again (required after any code or pcap change).
 
 **Done when:** All three tools pass and safety script passes. Tick every item in Step 9 of your runbook.
 
@@ -165,9 +165,9 @@ For each output, verify these keys exist and match `../brain/contract.py`:
 
 ### Day 5 (Wed Jul 1) — Lab ready report (do not converge yet)
 
-- [ ] Confirm all containers are still running: `docker ps` should show `practice-target` and `attacker`.
-- [ ] Run `bash verify-lab-safety.sh` one final time.
-- [ ] Message Dr. Zareen and Sebastian on Teams:
+- [DONE] Confirm all containers are still running: `docker ps` should show `practice-target` and `attacker`.
+- [DONE] Run `bash verify-lab-safety.sh` one final time.
+- [DONE] Message Dr. Zareen and Sebastian on Teams:
   - Lab is up and safety checks pass
   - All three tools tested and returning valid JSON
   - You are ready for **converge week of July 13** (not before)
@@ -210,9 +210,9 @@ echo "Running safety checks..."
 bash "$(dirname "$0")/verify-lab-safety.sh"
 ```
 
-- [ ] Write and test `start-lab.sh` (must call `verify-lab-safety.sh` at the end)
-- [ ] Add a matching `stop-lab.sh` (`docker stop practice-target attacker`)
-- [ ] Commit on branch `student1-tools`, open PR to `main`
+- [DONE] Write and test `start-lab.sh` (must call `verify-lab-safety.sh` at the end)
+- [DONE] Add a matching `stop-lab.sh` (`docker stop practice-target attacker`)
+- [DONE] Commit on branch `student1-tools`, open PR to `main`
 
 ---
 
@@ -220,10 +220,10 @@ bash "$(dirname "$0")/verify-lab-safety.sh"
 
 The runbook mentions swapping nginx for an Open Quantum Safe demo server later. This is the first step toward Q1 roadmap goals.
 
-- [ ] Research the OQS demo server image or nginx + oqs-provider TLS config.
-- [ ] Stand up a **second** target container (e.g. `practice-target-pqc`) on `lab-net` with post-quantum or hybrid TLS.
-- [ ] Confirm `tools.py detect` reports the PQC cipher suite on the new target.
-- [ ] Document the target name and port in a short `adversary/tools/README.md`.
+- [DONE] Research the OQS demo server image or nginx + oqs-provider TLS config.
+- [DONE] Stand up a **second** target container (e.g. `practice-target-pqc`) on `lab-net` with post-quantum or hybrid TLS.
+- [DONE] Confirm `tools.py detect` reports the PQC cipher suite on the new target.
+- [DONE] Document the target name and port in a short `adversary/tools/README.md`.
 
 **Done when:** `detect` against the PQC target returns a distinguishable cipher string in `crypto_detected`.
 

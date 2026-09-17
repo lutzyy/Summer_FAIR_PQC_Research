@@ -3,7 +3,7 @@ from typing import Any
 import uuid
 from pydantic import BaseModel, Field
 
-TOOL_OUTPUT_KEYS = ["attack_name", "cypto_detected", "attack_params", "outcome_notes"]
+TOOL_OUTPUT_KEYS = ["attack_name", "crypto_detected", "attack_params", "outcome_notes"]
 
 class RunRecord(BaseModel):
     run_id: str = Field(default_factory=lambda: str(uuid.uuid4()))

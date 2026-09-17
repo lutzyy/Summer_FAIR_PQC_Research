@@ -1,8 +1,17 @@
 import json
+import os
+from pathlib import Path
+
 import psycopg
+from dotenv import load_dotenv
 from contract import RunRecord
 
-DSN = "host=localhost port=5432 dbname=postgres user=postgres password=changeme"
+# Set POSTGRES_PASSWORD in .env (never commit that file)
+load_dotenv(Path(__file__).with_name(".env"))
+_password = os.environ.get("POSTGRES_PASSWORD")
+if not _password:
+    raise RuntimeError("POSTGRES_PASSWORD is not set; add it to adversary/brain/.env")
+DSN = f"host=localhost port=5432 dbname=postgres user=postgres password={_password}"
 
 def save_record(rec: RunRecord) -> None:
     with psycopg.connect(DSN) as conn:

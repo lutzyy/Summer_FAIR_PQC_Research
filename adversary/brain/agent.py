@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import json, subprocess
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIChatModel
@@ -17,13 +18,13 @@ agent = Agent(
         system_prompt=(
             """
             You are a red-team adversary operating ONLY against an isolated practice 
-            hostpital in a lab. Given a target, decide on one attack, call the run_attack tool
+            hospital in a lab. Given a target, decide on one attack, call the run_attack tool
             exactly once, then briefly report what happened. Never act on anything other
             than the target you are given.
             """
             ),
         )
-def real_execute(target: str, attack: str) -> dict:
+def _execute(target: str, attack: str) -> dict:
     args = {
         "detect": ["detect", target],
         "replay": ["replay", target, "/opt/redteam/captures/sample.pcap"],
@@ -43,13 +44,6 @@ def real_execute(target: str, attack: str) -> dict:
         return {"attack_name": attack, "crypto_detected": None,
                 "attack_params": {"target": target},
                 "outcome_notes": f"Could not parse tool output: {e}; raw: {proc.stdout[-300:]}"}
-def _execute(target: str, attack: str) -> dict:
-    return {
-            "attack_name": f"stub_{attack}",
-            "crypto_detected": "TLSv1.3 / TLS_AES_256_GCM_SHA384",
-            "attack_params": {"target":target, "attack":attack},
-            "outcome_notes": "STUB result - replace _execute at converge.",
-            }
 
 @agent.tool_plain
 def run_attack(target: str, attack: str) -> str:

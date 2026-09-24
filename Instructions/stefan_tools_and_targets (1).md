@@ -389,15 +389,15 @@ When you edit `tools.py` in Cursor, just re-run the command — no rebuild neede
 
 ## Step 9 — You're done when you can tick all of these
 
-- [ ] `bash verify-lab-safety.sh` passes (all checks green)
-- [ ] `docker --version`, `docker ps`, and `docker run --rm hello-world` all work without a permission error
-- [ ] `lab-net` exists and the "ping the internet" test **fails**
-- [ ] `practice-target` is running on `lab-net`
-- [ ] `attacker` is running on `lab-net`, can reach the target, cannot reach the internet
-- [ ] `tools.py detect` returns a real protocol + cipher as JSON
-- [ ] `tools.py replay` runs your capture and returns JSON
-- [ ] `tools.py craft` returns JSON
-- [ ] Your tools print exactly the four keys defined in `../brain/contract.py`
+- [DONE] `bash verify-lab-safety.sh` passes (all checks green)
+- [DONE] `docker --version`, `docker ps`, and `docker run --rm hello-world` all work without a permission error
+- [DONE] `lab-net` exists and the "ping the internet" test **fails**
+- [DONE] `practice-target` is running on `lab-net`
+- [DONE] `attacker` is running on `lab-net`, can reach the target, cannot reach the internet
+- [DONE] `tools.py detect` returns a real protocol + cipher as JSON
+- [DONE] `tools.py replay` runs your capture and returns JSON
+- [DONE] `tools.py craft` returns JSON
+- [DONE] Your tools print exactly the four keys defined in `../brain/contract.py`
 
 ---
 

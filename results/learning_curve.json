@@ -1,0 +1,94 @@
+{
+  "sweep_factor_ranking": [
+    [
+      "key_exchange",
+      0.07407407407407408
+    ],
+    [
+      "authentication",
+      0.0
+    ],
+    [
+      "service_protocol",
+      0.0
+    ],
+    [
+      "device_constraint",
+      0.0
+    ],
+    [
+      "attack",
+      0.0
+    ]
+  ],
+  "designed_factor_importance": [
+    [
+      "key_exchange",
+      1.0
+    ],
+    [
+      "authentication",
+      0.7
+    ],
+    [
+      "attack",
+      0.5
+    ],
+    [
+      "service_protocol",
+      0.0
+    ],
+    [
+      "device_constraint",
+      0.0
+    ]
+  ],
+  "curve": [
+    {
+      "budget": 1,
+      "orchestrator_top2_agreement": 1.0,
+      "random_top2_agreement": 1.0
+    },
+    {
+      "budget": 2,
+      "orchestrator_top2_agreement": 1.0,
+      "random_top2_agreement": 0.5
+    },
+    {
+      "budget": 3,
+      "orchestrator_top2_agreement": 0.5,
+      "random_top2_agreement": 0.5
+    },
+    {
+      "budget": 4,
+      "orchestrator_top2_agreement": 0.5,
+      "random_top2_agreement": 0.5
+    },
+    {
+      "budget": 5,
+      "orchestrator_top2_agreement": 0.5,
+      "random_top2_agreement": 0.5
+    },
+    {
+      "budget": 6,
+      "orchestrator_top2_agreement": 1.0,
+      "random_top2_agreement": 0.5
+    },
+    {
+      "budget": 7,
+      "orchestrator_top2_agreement": 1.0,
+      "random_top2_agreement": 0.5
+    },
+    {
+      "budget": 8,
+      "orchestrator_top2_agreement": 0.5,
+      "random_top2_agreement": 0.5
+    },
+    {
+      "budget": 9,
+      "orchestrator_top2_agreement": 1.0,
+      "random_top2_agreement": 1.0
+    }
+  ],
+  "valid_cells": 9
+}

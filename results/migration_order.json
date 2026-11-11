@@ -1,0 +1,46 @@
+{
+  "migration_order": [
+    {
+      "step": "Upgrade key exchange hybrid \u2192 pure_pqc",
+      "risk_reduction": 0.6666666666666667,
+      "evidence": {
+        "hybrid_success_rate": 1.0,
+        "n_hybrid": 3,
+        "pure_pqc_success_rate": 0.3333333333333333,
+        "n_pure_pqc": 3
+      }
+    },
+    {
+      "step": "Upgrade key exchange classical \u2192 pure_pqc",
+      "risk_reduction": 0.3333333333333333,
+      "evidence": {
+        "classical_success_rate": 0.6666666666666666,
+        "n_classical": 3,
+        "pure_pqc_success_rate": 0.3333333333333333,
+        "n_pure_pqc": 3
+      }
+    },
+    {
+      "step": "Upgrade authentication classical \u2192 pqc (ML-DSA)",
+      "risk_reduction": 0.0,
+      "evidence": {
+        "classical_success_rate": 0.6666666666666666,
+        "n_classical": 3,
+        "pqc_success_rate": 0.6666666666666666,
+        "n_pqc": 6
+      }
+    },
+    {
+      "step": "Upgrade key exchange classical \u2192 hybrid",
+      "risk_reduction": -0.33333333333333337,
+      "evidence": {
+        "classical_success_rate": 0.6666666666666666,
+        "n_classical": 3,
+        "hybrid_success_rate": 1.0,
+        "n_hybrid": 3
+      }
+    }
+  ],
+  "caveat": "Derived from labeled experiments in this dataset only. Does not measure store-now-decrypt-later quantum advantage.",
+  "n_experiments": 9
+}

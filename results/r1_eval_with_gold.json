@@ -1,0 +1,117 @@
+{
+  "n_runs": 6,
+  "agreement_with_grader": 1.0,
+  "cohens_kappa_vs_grader": 1.0,
+  "confusion_matrix_rule_vs_blue": {
+    "success": {
+      "success": 4,
+      "failure": 0,
+      "inconclusive": 0
+    },
+    "failure": {
+      "success": 0,
+      "failure": 2,
+      "inconclusive": 0
+    },
+    "inconclusive": {
+      "success": 0,
+      "failure": 0,
+      "inconclusive": 0
+    }
+  },
+  "gold_accuracy_blue": 1.0,
+  "consistency_flip_rate": 0.0,
+  "ablation_agreement_with_grader": {
+    "all_sources": 1.0,
+    "tool_output_only": 1.0,
+    "no_sensors": 1.0
+  },
+  "disagreements": [],
+  "label_reliability_decision": {
+    "reliable_enough_for_label": true,
+    "criterion": {
+      "min_gold_accuracy": 0.85,
+      "max_flip_rate": 0.1,
+      "note": "Agreement with rule grader is not accuracy."
+    },
+    "reasons": [
+      "Gold accuracy 1.000 meets threshold.",
+      "Consistency flip rate 0.000 within budget.",
+      "Kappa vs rule grader=1.000 (informational; not the accuracy criterion)."
+    ]
+  },
+  "per_run": [
+    {
+      "run_id": "fixture-tls-ok",
+      "attack_name": "tls_probe",
+      "blue": "success",
+      "rule": "success",
+      "agree": true,
+      "repeats": [
+        "success",
+        "success",
+        "success"
+      ]
+    },
+    {
+      "run_id": "fixture-tls-fail",
+      "attack_name": "tls_probe",
+      "blue": "failure",
+      "rule": "failure",
+      "agree": true,
+      "repeats": [
+        "failure",
+        "failure",
+        "failure"
+      ]
+    },
+    {
+      "run_id": "fixture-tls-pqc",
+      "attack_name": "tls_probe",
+      "blue": "success",
+      "rule": "success",
+      "agree": true,
+      "repeats": [
+        "success",
+        "success",
+        "success"
+      ]
+    },
+    {
+      "run_id": "fixture-replay-ok",
+      "attack_name": "pcap_replay",
+      "blue": "success",
+      "rule": "success",
+      "agree": true,
+      "repeats": [
+        "success",
+        "success",
+        "success"
+      ]
+    },
+    {
+      "run_id": "fixture-syn-ok",
+      "attack_name": "scapy_syn_probe",
+      "blue": "success",
+      "rule": "success",
+      "agree": true,
+      "repeats": [
+        "success",
+        "success",
+        "success"
+      ]
+    },
+    {
+      "run_id": "fixture-syn-fail",
+      "attack_name": "scapy_syn_probe",
+      "blue": "failure",
+      "rule": "failure",
+      "agree": true,
+      "repeats": [
+        "failure",
+        "failure",
+        "failure"
+      ]
+    }
+  ]
+}

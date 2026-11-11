@@ -17,3 +17,11 @@ pgdata/
 
 # Editor noise
 .DS_Store
+*.swp
+
+# Blue Agent local LLM audit (may contain prompts)
+adversary/blue/.langfuse_local/
+
+# Local result regenerations (committed samples may live under results/ — keep large dumps out)
+results/*.tmp
+dataset/v1/*.parquet

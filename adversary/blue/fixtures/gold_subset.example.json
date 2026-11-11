@@ -1,0 +1,9 @@
+{
+  "fixture-tls-ok": "success",
+  "fixture-tls-fail": "failure",
+  "fixture-tls-pqc": "success",
+  "fixture-replay-ok": "success",
+  "fixture-syn-ok": "success",
+  "fixture-syn-fail": "failure",
+  "_note": "Example gold labels for fixtures only. Replace with hand-adjudicated MIDAS runs (stratified + all disagreements)."
+}

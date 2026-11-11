@@ -1,0 +1,92 @@
+[
+  {
+    "key_exchange": "classical",
+    "authentication": "classical",
+    "service_protocol": "practice_https",
+    "device_constraint": "unconstrained",
+    "attack": "tls_probe",
+    "cell_id": "classical|classical|practice_https|unconstrained|tls_probe",
+    "success": true,
+    "selected_by": "sweep"
+  },
+  {
+    "key_exchange": "classical",
+    "authentication": "classical",
+    "service_protocol": "practice_https",
+    "device_constraint": "unconstrained",
+    "attack": "pcap_replay",
+    "cell_id": "classical|classical|practice_https|unconstrained|pcap_replay",
+    "success": false,
+    "selected_by": "sweep"
+  },
+  {
+    "key_exchange": "classical",
+    "authentication": "classical",
+    "service_protocol": "practice_https",
+    "device_constraint": "unconstrained",
+    "attack": "scapy_syn_probe",
+    "cell_id": "classical|classical|practice_https|unconstrained|scapy_syn_probe",
+    "success": true,
+    "selected_by": "sweep"
+  },
+  {
+    "key_exchange": "hybrid",
+    "authentication": "pqc",
+    "service_protocol": "practice_https",
+    "device_constraint": "unconstrained",
+    "attack": "tls_probe",
+    "cell_id": "hybrid|pqc|practice_https|unconstrained|tls_probe",
+    "success": true,
+    "selected_by": "sweep"
+  },
+  {
+    "key_exchange": "hybrid",
+    "authentication": "pqc",
+    "service_protocol": "practice_https",
+    "device_constraint": "unconstrained",
+    "attack": "pcap_replay",
+    "cell_id": "hybrid|pqc|practice_https|unconstrained|pcap_replay",
+    "success": true,
+    "selected_by": "sweep"
+  },
+  {
+    "key_exchange": "hybrid",
+    "authentication": "pqc",
+    "service_protocol": "practice_https",
+    "device_constraint": "unconstrained",
+    "attack": "scapy_syn_probe",
+    "cell_id": "hybrid|pqc|practice_https|unconstrained|scapy_syn_probe",
+    "success": true,
+    "selected_by": "sweep"
+  },
+  {
+    "key_exchange": "pure_pqc",
+    "authentication": "pqc",
+    "service_protocol": "practice_https",
+    "device_constraint": "unconstrained",
+    "attack": "tls_probe",
+    "cell_id": "pure_pqc|pqc|practice_https|unconstrained|tls_probe",
+    "success": false,
+    "selected_by": "sweep"
+  },
+  {
+    "key_exchange": "pure_pqc",
+    "authentication": "pqc",
+    "service_protocol": "practice_https",
+    "device_constraint": "unconstrained",
+    "attack": "pcap_replay",
+    "cell_id": "pure_pqc|pqc|practice_https|unconstrained|pcap_replay",
+    "success": true,
+    "selected_by": "sweep"
+  },
+  {
+    "key_exchange": "pure_pqc",
+    "authentication": "pqc",
+    "service_protocol": "practice_https",
+    "device_constraint": "unconstrained",
+    "attack": "scapy_syn_probe",
+    "cell_id": "pure_pqc|pqc|practice_https|unconstrained|scapy_syn_probe",
+    "success": false,
+    "selected_by": "sweep"
+  }
+]

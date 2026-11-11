@@ -1,0 +1,56 @@
+[
+  {
+    "run_id": "fixture-tls-ok",
+    "timestamp": "2026-11-11T00:00:00+00:00",
+    "target": "practice-target:443",
+    "crypto_detected": "TLSv1.3 / TLS_AES_256_GCM_SHA384 / group=X25519 / sig=rsa_pss_rsae_sha256",
+    "attack_name": "tls_probe",
+    "attack_params": {"target": "practice-target:443"},
+    "outcome_notes": "Handshake completed."
+  },
+  {
+    "run_id": "fixture-tls-fail",
+    "timestamp": "2026-11-11T00:01:00+00:00",
+    "target": "practice-target:443",
+    "crypto_detected": null,
+    "attack_name": "tls_probe",
+    "attack_params": {"target": "practice-target:443"},
+    "outcome_notes": "Could not read handshake."
+  },
+  {
+    "run_id": "fixture-tls-pqc",
+    "timestamp": "2026-11-11T00:02:00+00:00",
+    "target": "practice-target-pqc:4433",
+    "crypto_detected": "TLSv1.3 / TLS_AES_256_GCM_SHA384 / group=X25519MLKEM768 / sig=mldsa65",
+    "attack_name": "tls_probe",
+    "attack_params": {"target": "practice-target-pqc:4433"},
+    "outcome_notes": "Handshake completed."
+  },
+  {
+    "run_id": "fixture-replay-ok",
+    "timestamp": "2026-11-11T00:03:00+00:00",
+    "target": "practice-target:443",
+    "crypto_detected": null,
+    "attack_name": "pcap_replay",
+    "attack_params": {"target": "practice-target:443", "pcap": "/opt/redteam/captures/sample.pcap"},
+    "outcome_notes": "Actual: 10 packets (10 bytes) sent in 0.01 seconds. Replay finished."
+  },
+  {
+    "run_id": "fixture-syn-ok",
+    "timestamp": "2026-11-11T00:04:00+00:00",
+    "target": "practice-target:443",
+    "crypto_detected": null,
+    "attack_name": "scapy_syn_probe",
+    "attack_params": {"target": "practice-target:443", "port": 443},
+    "outcome_notes": "Port 443 responded with TCP flags SA."
+  },
+  {
+    "run_id": "fixture-syn-fail",
+    "timestamp": "2026-11-11T00:05:00+00:00",
+    "target": "practice-target:443",
+    "crypto_detected": null,
+    "attack_name": "scapy_syn_probe",
+    "attack_params": {"target": "practice-target:443", "port": 443},
+    "outcome_notes": "No response from port 443."
+  }
+]

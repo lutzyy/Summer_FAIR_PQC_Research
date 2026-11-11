@@ -1,0 +1,130 @@
+{
+  "experiments": [
+    {
+      "key_exchange": "pure_pqc",
+      "authentication": "pqc",
+      "service_protocol": "practice_https",
+      "device_constraint": "unconstrained",
+      "attack": "tls_probe",
+      "cell_id": "pure_pqc|pqc|practice_https|unconstrained|tls_probe",
+      "success": false,
+      "selected_by": "orchestrator"
+    },
+    {
+      "key_exchange": "classical",
+      "authentication": "classical",
+      "service_protocol": "practice_https",
+      "device_constraint": "unconstrained",
+      "attack": "scapy_syn_probe",
+      "cell_id": "classical|classical|practice_https|unconstrained|scapy_syn_probe",
+      "success": true,
+      "selected_by": "orchestrator"
+    },
+    {
+      "key_exchange": "hybrid",
+      "authentication": "pqc",
+      "service_protocol": "practice_https",
+      "device_constraint": "unconstrained",
+      "attack": "pcap_replay",
+      "cell_id": "hybrid|pqc|practice_https|unconstrained|pcap_replay",
+      "success": true,
+      "selected_by": "orchestrator"
+    },
+    {
+      "key_exchange": "classical",
+      "authentication": "classical",
+      "service_protocol": "practice_https",
+      "device_constraint": "unconstrained",
+      "attack": "pcap_replay",
+      "cell_id": "classical|classical|practice_https|unconstrained|pcap_replay",
+      "success": false,
+      "selected_by": "orchestrator"
+    },
+    {
+      "key_exchange": "hybrid",
+      "authentication": "pqc",
+      "service_protocol": "practice_https",
+      "device_constraint": "unconstrained",
+      "attack": "scapy_syn_probe",
+      "cell_id": "hybrid|pqc|practice_https|unconstrained|scapy_syn_probe",
+      "success": false,
+      "selected_by": "orchestrator"
+    },
+    {
+      "key_exchange": "classical",
+      "authentication": "classical",
+      "service_protocol": "practice_https",
+      "device_constraint": "unconstrained",
+      "attack": "tls_probe",
+      "cell_id": "classical|classical|practice_https|unconstrained|tls_probe",
+      "success": true,
+      "selected_by": "orchestrator"
+    },
+    {
+      "key_exchange": "pure_pqc",
+      "authentication": "pqc",
+      "service_protocol": "practice_https",
+      "device_constraint": "unconstrained",
+      "attack": "scapy_syn_probe",
+      "cell_id": "pure_pqc|pqc|practice_https|unconstrained|scapy_syn_probe",
+      "success": true,
+      "selected_by": "orchestrator"
+    },
+    {
+      "key_exchange": "hybrid",
+      "authentication": "pqc",
+      "service_protocol": "practice_https",
+      "device_constraint": "unconstrained",
+      "attack": "tls_probe",
+      "cell_id": "hybrid|pqc|practice_https|unconstrained|tls_probe",
+      "success": false,
+      "selected_by": "orchestrator"
+    }
+  ],
+  "migration_order": {
+    "migration_order": [
+      {
+        "step": "Upgrade key exchange classical \u2192 hybrid",
+        "risk_reduction": 0.3333333333333333,
+        "evidence": {
+          "classical_success_rate": 0.6666666666666666,
+          "n_classical": 3,
+          "hybrid_success_rate": 0.3333333333333333,
+          "n_hybrid": 3
+        }
+      },
+      {
+        "step": "Upgrade authentication classical \u2192 pqc (ML-DSA)",
+        "risk_reduction": 0.2666666666666666,
+        "evidence": {
+          "classical_success_rate": 0.6666666666666666,
+          "n_classical": 3,
+          "pqc_success_rate": 0.4,
+          "n_pqc": 5
+        }
+      },
+      {
+        "step": "Upgrade key exchange classical \u2192 pure_pqc",
+        "risk_reduction": 0.16666666666666663,
+        "evidence": {
+          "classical_success_rate": 0.6666666666666666,
+          "n_classical": 3,
+          "pure_pqc_success_rate": 0.5,
+          "n_pure_pqc": 2
+        }
+      },
+      {
+        "step": "Upgrade key exchange hybrid \u2192 pure_pqc",
+        "risk_reduction": -0.16666666666666669,
+        "evidence": {
+          "hybrid_success_rate": 0.3333333333333333,
+          "n_hybrid": 3,
+          "pure_pqc_success_rate": 0.5,
+          "n_pure_pqc": 2
+        }
+      }
+    ],
+    "caveat": "Derived from labeled experiments in this dataset only. Does not measure store-now-decrypt-later quantum advantage.",
+    "n_experiments": 8
+  }
+}

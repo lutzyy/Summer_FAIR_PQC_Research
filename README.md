@@ -65,25 +65,29 @@ Two isolated environments. Keeping them apart means an attack experiment can nev
 pqc-hospital-testbed/
 ├── README.md
 ├── .gitignore
-├── docs/                       # Build guides and onboarding
-│   ├── student1_tools_and_targets.md
-│   ├── student2_brain_and_records.md
-│   └── github_setup_for_students.md
-├── adversary/                  # The red team agent (current focus)
-│   ├── tools/                  # Tools & targets  (Student 1)
-│   │   ├── Dockerfile
-│   │   ├── tools.py
-│   │   ├── nginx.conf
-│   │   └── captures/           # botnet pcaps (gitignored — not committed)
-│   └── brain/                  # Agent & records  (Student 2)
-│       ├── contract.py         # shared run-record contract (single source of truth)
-│       ├── agent.py
-│       ├── db.py
-│       └── schema.sql
-├── orchestrator/               # The brain: crypto inventory & migration decisions (planned)
-├── lab/                        # The simulated hospital: EHR, imaging, devices (planned)
-└── infra/                      # Compose files, network setup, shared infra (planned)
+├── Instructions/               # Student runbooks and safety
+├── docs/blue_orchestrator/     # Blue Agent + Orchestrator track docs
+├── adversary/
+│   ├── tools/                  # Red tools & practice targets
+│   ├── brain/                  # Red agent, contract.py, Postgres runs
+│   └── blue/                   # Blue Agent (labels attack outcomes)
+├── orchestrator/               # Config space, simulator, selection, migration order
+├── dataset/                    # Dataset v1 export + DATASET.md
+├── scripts/                    # Offline reproduce command
+├── lab/                        # Simulated hospital (planned)
+└── infra/                      # Compose / shared infra (planned)
 ```
+
+### Blue Agent + Orchestrator (dataset v1)
+
+See `docs/blue_orchestrator/current_state.md` and:
+
+```bash
+bash scripts/run_blue_orchestrator_offline.sh
+```
+
+Blue Agent README: `adversary/blue/README.md`. Orchestrator README: `orchestrator/README.md`. Dataset: `dataset/DATASET.md`.
+
 
 ## Getting started
 

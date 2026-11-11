@@ -27,5 +27,8 @@ python3 dataset/export_dataset.py \
   --out-csv dataset/v1/dataset_v1.csv \
   --out-json dataset/v1/dataset_v1.json
 
+echo "=== Pytest (offline; excludes live e2e) ==="
+python3 -m pytest -q -m "not e2e"
+
 echo "=== Done ==="
 ls -la results dataset/v1

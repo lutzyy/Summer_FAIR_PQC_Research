@@ -88,6 +88,8 @@ bash scripts/run_blue_orchestrator_offline.sh
 
 Blue Agent README: `adversary/blue/README.md`. Orchestrator README: `orchestrator/README.md`. Dataset: `dataset/DATASET.md`.
 
+Offline tests (no Docker): `pytest -q -m "not e2e"`. Live MIDAS e2e mark: `RUN_E2E=1 pytest -m e2e` (see `tests/README.md`).
+
 
 ## Getting started
 

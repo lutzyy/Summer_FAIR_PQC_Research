@@ -29,11 +29,13 @@ If any check FAILs, fix isolation before MIDAS lab work. LLM calls must use **se
 ```bash
 cd adversary/blue
 python3 agent.py --json-run fixtures/sample_runs.json --heuristic --also-rule-grade
-# first object only — use a single-run file or pass one run; for the list fixture:
-python3 -c "import json; from pathlib import Path; import agent; runs=json.loads(Path('fixtures/sample_runs.json').read_text()); print(agent.judge_run(runs[0], force_heuristic=True).model_dump_json(indent=2))"
-
 python3 evaluation/run_eval.py --runs-json fixtures/sample_runs.json --out ../../../results/r1_eval.json
+
+# from repo root — Blue-only + mocked red→blue tests (no Docker)
+pytest -q -m "not e2e"
 ```
+
+See `tests/README.md`. Live MIDAS e2e: `RUN_E2E=1 pytest -m e2e`.
 
 ## MIDAS (Postgres + vLLM)
 
